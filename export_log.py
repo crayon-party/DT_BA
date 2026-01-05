@@ -13,10 +13,12 @@ def export_single_run(max_h=2000):
     while not sim.is_finished(max_h=max_h):
         sim.step()
         snapshots.append(snapshot_to_dict(sim))
-
+    wrapped = {
+        "Items": snapshots
+    }
     print(f"Exported {len(snapshots)} snapshots to naval_snapshots.json")
     with open("naval_snapshots.json", "w", encoding="utf-8") as f:
-        json.dump(snapshots, f, ensure_ascii=False, indent=2)
+        json.dump(wrapped, f, ensure_ascii=False, indent=2)
 
 if __name__ == "__main__":
     export_single_run(2000)
