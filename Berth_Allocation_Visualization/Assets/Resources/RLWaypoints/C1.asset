@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5878f2abe8c045d68e2ca639eab9843, type: 3}
+  m_Name: C1
+  m_EditorClassIdentifier: 
+  waypointName: C1
+  RLPosition: {x: -38.89, y: -0.24, z: -3.88}
+  SelectedPosition: {x: 0, y: 0, z: 0}
+  dockDirection: 1
+  dockSide: 1
+  dockDistance: 0.01
+  forward: {x: 0, y: 0, z: 1}
+  preDockDistance: 4
+  steps: 4
+  useDockAngle: 1
+  dockAngle: 11

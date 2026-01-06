@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5f35f41b72c445c7a854852c12e4d22, type: 3}
+  m_Name: J-78
+  m_EditorClassIdentifier: 
+  Start_Dates: 120200004f0200005f02000078020000930200009e020000a9020000b9020000
+  Finish_Dates: 4f0200005f02000078020000930200009e020000a9020000b9020000cb020000
+  Entry_Index: 338
+  Ship_Name: J-78
+  Ship_Index: 77
+  Ship_Type: LNG
+  Category: 8
+  Launching_Date: 530
+  Delivery_Date: 715
+  Operation_Name: O-78-1
+  Operation_Index: 337
+  Operation_Type: "\uD654\uBB3C\uCC3D"
+  Order: 1
+  Duration: 61
+  Interruption: N
+  Fixed_Duration: 0

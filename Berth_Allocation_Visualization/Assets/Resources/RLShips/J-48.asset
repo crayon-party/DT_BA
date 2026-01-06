@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5f35f41b72c445c7a854852c12e4d22, type: 3}
+  m_Name: J-48
+  m_EditorClassIdentifier: 
+  Start_Dates: 310100007e01000099010000
+  Finish_Dates: 7e01000099010000c4010000
+  Entry_Index: 207
+  Ship_Name: J-48
+  Ship_Index: 47
+  Ship_Type: S_COT
+  Category: 3
+  Launching_Date: 305
+  Delivery_Date: 452
+  Operation_Name: O-48-1
+  Operation_Index: 206
+  Operation_Type: "\uCD95\uACC4\uC791\uC5C5"
+  Order: 1
+  Duration: 77
+  Interruption: F
+  Fixed_Duration: 10

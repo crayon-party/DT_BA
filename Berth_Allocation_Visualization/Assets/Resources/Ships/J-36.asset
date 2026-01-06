@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5f35f41b72c445c7a854852c12e4d22, type: 3}
+  m_Name: J-36
+  m_EditorClassIdentifier: 
+  Start_Dates: e7000000410100004e010000
+  Finish_Dates: 410100004e01000061010000
+  Entry_Index: 150
+  Ship_Name: J-36
+  Ship_Index: 35
+  Ship_Type: S_SHTL
+  Category: 1
+  Launching_Date: 231
+  Delivery_Date: 353
+  Operation_Name: O-36-1
+  Operation_Index: 149
+  Operation_Type: "\uCD95\uACC4\uC791\uC5C5"
+  Order: 1
+  Duration: 90
+  Interruption: F
+  Fixed_Duration: 15

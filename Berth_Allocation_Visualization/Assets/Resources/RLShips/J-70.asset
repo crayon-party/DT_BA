@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5f35f41b72c445c7a854852c12e4d22, type: 3}
+  m_Name: J-70
+  m_EditorClassIdentifier: 
+  Start_Dates: d40100002d02000039020000
+  Finish_Dates: 2d0200003902000054020000
+  Entry_Index: 304
+  Ship_Name: J-70
+  Ship_Index: 69
+  Ship_Type: VL_CONT
+  Category: 6
+  Launching_Date: 468
+  Delivery_Date: 596
+  Operation_Name: O-70-1
+  Operation_Index: 303
+  Operation_Type: "\uCD95\uACC4\uC791\uC5C5"
+  Order: 1
+  Duration: 89
+  Interruption: F
+  Fixed_Duration: 15

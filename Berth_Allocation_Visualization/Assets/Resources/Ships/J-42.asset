@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5f35f41b72c445c7a854852c12e4d22, type: 3}
+  m_Name: J-42
+  m_EditorClassIdentifier: 
+  Start_Dates: 120100007b01000097010000c3010000f3010000060200001902000035020000
+  Finish_Dates: 7b01000097010000c3010000f301000006020000190200003502000052020000
+  Entry_Index: 174
+  Ship_Name: J-42
+  Ship_Index: 41
+  Ship_Type: LNG
+  Category: 8
+  Launching_Date: 274
+  Delivery_Date: 594
+  Operation_Name: O-42-1
+  Operation_Index: 173
+  Operation_Type: "\uD654\uBB3C\uCC3D"
+  Order: 1
+  Duration: 105
+  Interruption: N
+  Fixed_Duration: 0

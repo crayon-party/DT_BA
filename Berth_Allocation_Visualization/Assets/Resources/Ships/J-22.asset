@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5f35f41b72c445c7a854852c12e4d22, type: 3}
+  m_Name: J-22
+  m_EditorClassIdentifier: 
+  Start_Dates: 7d000000070100001b010000
+  Finish_Dates: 070100001b01000038010000
+  Entry_Index: 88
+  Ship_Name: J-22
+  Ship_Index: 21
+  Ship_Type: S_SHTL
+  Category: 1
+  Launching_Date: 125
+  Delivery_Date: 312
+  Operation_Name: O-22-1
+  Operation_Index: 87
+  Operation_Type: "\uCD95\uACC4\uC791\uC5C5"
+  Order: 1
+  Duration: 138
+  Interruption: F
+  Fixed_Duration: 15

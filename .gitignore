@@ -1,6 +1,7 @@
 #########################
 # Unity Generated Files #
 #########################
+.DS_Store
 [Ll]ibrary/
 [Tt]emp/
 [Oo]bj/
@@ -51,6 +52,7 @@ sysinfo.txt
 #########################
 *.psd
 *.tga
+*.png
 *.exr
 
 ################

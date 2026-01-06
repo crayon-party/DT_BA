@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5f35f41b72c445c7a854852c12e4d22, type: 3}
+  m_Name: J-55
+  m_EditorClassIdentifier: 
+  Start_Dates: 590100009e010000a7010000
+  Finish_Dates: 9e010000a7010000bc010000
+  Entry_Index: 238
+  Ship_Name: J-55
+  Ship_Index: 54
+  Ship_Type: VL_CONT
+  Category: 6
+  Launching_Date: 345
+  Delivery_Date: 444
+  Operation_Name: O-55-1
+  Operation_Index: 237
+  Operation_Type: "\uCD95\uACC4\uC791\uC5C5"
+  Order: 1
+  Duration: 69
+  Interruption: F
+  Fixed_Duration: 15

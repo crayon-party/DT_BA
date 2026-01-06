@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5f35f41b72c445c7a854852c12e4d22, type: 3}
+  m_Name: J-14
+  m_EditorClassIdentifier: 
+  Start_Dates: 4900000076000000a4000000b3000000
+  Finish_Dates: 76000000a4000000b3000000d2000000
+  Entry_Index: 43
+  Ship_Name: J-14
+  Ship_Index: 13
+  Ship_Type: PC
+  Category: 7
+  Launching_Date: 73
+  Delivery_Date: 210
+  Operation_Name: O-14-1
+  Operation_Index: 42
+  Operation_Type: "\uD2B9\uC218\uB3C4\uC7A5"
+  Order: 1
+  Duration: 45
+  Interruption: N
+  Fixed_Duration: 0

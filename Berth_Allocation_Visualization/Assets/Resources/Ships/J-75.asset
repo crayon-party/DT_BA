@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5f35f41b72c445c7a854852c12e4d22, type: 3}
+  m_Name: J-75
+  m_EditorClassIdentifier: 
+  Start_Dates: f90100005b020000750200009e020000ca020000db020000ec02000006030000
+  Finish_Dates: 5b020000750200009e020000ca020000db020000ec0200000603000022030000
+  Entry_Index: 319
+  Ship_Name: J-75
+  Ship_Index: 74
+  Ship_Type: LNG
+  Category: 8
+  Launching_Date: 505
+  Delivery_Date: 802
+  Operation_Name: O-75-1
+  Operation_Index: 318
+  Operation_Type: "\uD654\uBB3C\uCC3D"
+  Order: 1
+  Duration: 98
+  Interruption: N
+  Fixed_Duration: 0

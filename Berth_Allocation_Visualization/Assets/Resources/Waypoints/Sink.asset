@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5878f2abe8c045d68e2ca639eab9843, type: 3}
+  m_Name: Sink
+  m_EditorClassIdentifier: 
+  waypointName: Sink
+  RLPosition: {x: 70.5, y: -0.046, z: -75.3}
+  SelectedPosition: {x: 0, y: 0, z: 0}
+  dockDirection: 0
+  dockSide: -1
+  dockDistance: 0.5
+  forward: {x: 0, y: 0, z: 1}
+  preDockDistance: 4
+  steps: 4
+  useDockAngle: 0
+  dockAngle: 0

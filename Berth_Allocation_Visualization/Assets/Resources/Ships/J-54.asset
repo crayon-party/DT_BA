@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5f35f41b72c445c7a854852c12e4d22, type: 3}
+  m_Name: J-54
+  m_EditorClassIdentifier: 
+  Start_Dates: 52010000b5010000d0010000fa01000027020000390200004b02000066020000
+  Finish_Dates: b5010000d0010000fa01000027020000390200004b0200006602000081020000
+  Entry_Index: 230
+  Ship_Name: J-54
+  Ship_Index: 53
+  Ship_Type: LNG
+  Category: 8
+  Launching_Date: 338
+  Delivery_Date: 641
+  Operation_Name: O-54-1
+  Operation_Index: 229
+  Operation_Type: "\uD654\uBB3C\uCC3D"
+  Order: 1
+  Duration: 99
+  Interruption: N
+  Fixed_Duration: 0
