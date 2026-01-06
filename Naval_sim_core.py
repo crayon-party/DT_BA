@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 from collections import Counter
 
+
 # 1. 함종 및 부두 설정
 VESSEL_SPECS = {
     'K': {'readiness': 94, 'fatigue': 8.0, 'stay_range': (72, 96), 'tugs': 2, 'duration': 2, 'cycle': 504, 'count': 3,

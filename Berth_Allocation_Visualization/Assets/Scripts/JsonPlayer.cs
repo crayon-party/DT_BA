@@ -1,74 +1,105 @@
 using System.IO;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
-public class JsonPlayer : MonoBehaviour 
+public class JsonPlayer : MonoBehaviour
 {
     [Header("Setup")]
     public PortVisualizer visualizer;
-    public float replaySpeed = 50f;  // snapshots per second
-    
+    [Tooltip("Simulation speed scaling factor. Default = 5, range 1–20.")]
+    [Range(1f, 20f)]
+    public float simSpeed = 5f;
+    public Slider speedSlider;       // optional, assign in Inspector
+    public TMP_Text speedText;           // optional, display speed
+
     StateMessage[] snapshots;
     int currentIndex = 0;
     float timer = 0f;
-    
-    void Start() {
-        LoadSnapshots();
-    }
-    
-    void LoadSnapshots() 
-    {
-    string filename = "naval_snapshots.json";
- 
-    // Editor: use Assets/StreamingAssets directly
-    string path;
-    #if UNITY_EDITOR
-        path = System.IO.Path.Combine(Application.dataPath, "StreamingAssets", filename);
-    #else
-        path = System.IO.Path.Combine(Application.streamingAssetsPath, filename);
-    #endif
-    
-    Debug.Log($"Loading from: {path}");
-    
-    if (!System.IO.File.Exists(path)) {
-        Debug.LogError($"File not found: {path}");
-        Debug.LogError("Copy naval_snapshots.json to Assets/StreamingAssets/");
-        return;
-    }
-    
-    string jsonText = System.IO.File.ReadAllText(path);
-    //SnapshotWrapper wrapper = JsonUtility.FromJson<SnapshotWrapper>(jsonText);
-    snapshots = JsonHelper.FromJson<StateMessage>(jsonText);
-    
-    Debug.Log($"✅ Loaded {snapshots.Length} snapshots");
-    if (snapshots.Length > 0) {
-        visualizer.ApplyState(snapshots[0]);
-    }
-}
 
-    
-    void Update() {
-        if (snapshots == null || snapshots.Length == 0) return;
-        
-        timer += Time.deltaTime * replaySpeed;
-        int targetIndex = Mathf.FloorToInt(timer);
-        
-        if (targetIndex >= snapshots.Length) {
-            targetIndex = snapshots.Length - 1;  // end of simulation
+    void Start()
+    {
+        LoadSnapshots();
+        if (speedSlider != null)
+        {
+            speedSlider.minValue = 1f;
+            speedSlider.maxValue = 20f;
+            speedSlider.value = simSpeed; 
+            speedSlider.onValueChanged.AddListener(OnSpeedChanged);
         }
-        
-        if (targetIndex != currentIndex) {
-            currentIndex = targetIndex;
+
+        if (speedText != null)
+            speedText.text = $"Speed: {simSpeed:F1}x";
+    }
+
+        void Update()
+    {
+        if (snapshots == null || snapshots.Length == 0) return;
+
+        // Advance simulation time scaled by simSpeed
+        timer += Time.deltaTime * simSpeed;
+
+        // Clamp timer to last snapshot
+        if (timer >= snapshots.Length - 1)
+            timer = snapshots.Length - 1;
+
+        int index = Mathf.Min(Mathf.FloorToInt(timer), snapshots.Length - 1);
+
+        if (index != currentIndex)
+        {
+            currentIndex = index;
             visualizer.ApplyState(snapshots[currentIndex]);
-            
-            // Debug info
-            if (currentIndex % 100 == 0) {
-                Debug.Log($"Time {snapshots[currentIndex].time}: " +
-                         $"Ships at berth: {CountAtBerth(snapshots[currentIndex].ships)}");
+
+            // Optional debug
+            if (currentIndex % 100 == 0)
+            {
+                Debug.Log($"Time {snapshots[currentIndex].time}: Ships at berth: {CountAtBerth(snapshots[currentIndex].ships)}");
             }
         }
     }
-    
-    int CountAtBerth(ShipState[] ships) {
-        return System.Array.FindAll(ships, s => s.pier != null).Length;
+
+    void OnSpeedChanged(float value)
+    {
+        simSpeed = value;
+        if (speedText != null)
+            speedText.text = $"Speed: {simSpeed:F2}x";
+    }
+
+    void LoadSnapshots()
+    {
+        string filename = "naval_snapshots.json";
+
+#if UNITY_EDITOR
+        string path = Path.Combine(Application.dataPath, "StreamingAssets", filename);
+#else
+        string path = Path.Combine(Application.streamingAssetsPath, filename);
+#endif
+
+        Debug.Log($"Loading from: {path}");
+
+        if (!File.Exists(path))
+        {
+            Debug.LogError($"File not found: {path}");
+            Debug.LogError("Copy naval_snapshots.json to Assets/StreamingAssets/");
+            return;
+        }
+
+        string jsonText = File.ReadAllText(path);
+        snapshots = JsonHelper.FromJson<StateMessage>(jsonText);
+
+        Debug.Log($"Loaded {snapshots.Length} snapshots");
+
+        if (snapshots.Length > 0)
+        {
+            visualizer.ApplyState(snapshots[0]);
+        }
+    }
+
+    int CountAtBerth(ShipState[] ships)
+    {
+        return System.Array.FindAll(
+            ships,
+            s => !string.IsNullOrEmpty(s.pier) && s.layer >= 0
+        ).Length;
     }
 }
