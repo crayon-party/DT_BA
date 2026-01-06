@@ -1,0 +1,60 @@
+#########################
+# Unity Generated Files #
+#########################
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
+
+MemoryCaptures/
+Recordings/
+sysinfo.txt
+*.log
+
+[Pp]ackage[Cc]ache/
+
+################
+# IDE Settings #
+################
+.vs/
+.idea/
+.vscode/
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+*.DotSettings.user
+
+################
+# Build Output #
+################
+*.apk
+*.aab
+*.app
+*.unitypackage
+
+#########################
+# Large Raw Source Files#
+#########################
+*.psd
+*.tga
+*.exr
+
+################
+# Addressables #
+################
+/ServerData
+/[Aa]ssets/StreamingAssets/aa*
