@@ -74,3 +74,10 @@ TextureImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 124154
+  packageName: Cartoon Shipyards
+  packageVersion: 1.0
+  assetPath: Assets/Cartoon Shipyard/PostProcessing/Resources/Bluenoise64/LDR_LLL1_13.png
+  uploadId: 258040

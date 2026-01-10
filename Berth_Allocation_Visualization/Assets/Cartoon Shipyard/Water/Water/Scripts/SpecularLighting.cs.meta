@@ -7,3 +7,10 @@ MonoImporter:
   icon: {instanceID: 0}
   userData: 
   assetBundleName: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 124154
+  packageName: Cartoon Shipyards
+  packageVersion: 1.0
+  assetPath: Assets/Cartoon Shipyard/Water/Water/Scripts/SpecularLighting.cs
+  uploadId: 258040

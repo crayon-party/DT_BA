@@ -10,3 +10,10 @@ MonoImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 124154
+  packageName: Cartoon Shipyards
+  packageVersion: 1.0
+  assetPath: Assets/Cartoon Shipyard/PostProcessing/Runtime/Components/BuiltinDebugViewsComponent.cs
+  uploadId: 258040
