@@ -23,10 +23,10 @@ Phase 1b scope (deterministic, no weather/lunch):
 Requirements:  pip install pulp numpy pandas
 
 Usage:
-    python naval_milp_benchmark.py                   # single MILP run
-    python naval_milp_benchmark.py --compare         # MILP + GA side-by-side
-    python naval_milp_benchmark.py --sweep N         # N seeds → CSV
-    python naval_milp_benchmark.py --horizon 72      # default; use 48 for speed
+    python MILP.py                   # single MILP run
+    python MILP.py --compare         # MILP + GA side-by-side
+    python MILP.py --sweep N         # N seeds → CSV
+    python MILP.py --horizon 72      # default; use 48 for speed
 """
 
 import argparse
@@ -278,61 +278,67 @@ def build_milp(scenario, horizon_h=72, time_limit_s=300, verbose=False):
         )
         prob += (tug_expr <= N_TUGS, f"C6_tugs_{t}")
 
-    # ── C7: shifting ──────────────────────────────────────────────────────────
-    # shift[v] = 1 if vessel v (at inner layer l_inner) is blocked at any point
-    # by vessel w occupying outer layer l_outer < l_inner at the same pier.
+    # ── C7: shifting (aggregated O(V²T) formulation) ──────────────────────────
+    # shift[vi] = 1 if vi (inner layer) is blocked by any vj (outer layer)
+    # whose occupation window overlaps vi's window at the same pier.
     #
-    # Using start variables directly (no auxiliary occ variable needed):
-    #   shift[v] >= start[v,p,l_inner,tv] + start[w,p,l_outer,tw] - 1
-    # for any (tv, tw) whose occupation windows overlap:
-    #   tv <= tw + stay[w] - 1  AND  tw <= tv + stay[v] - 1
-    # i.e., [tv, tv+stay_v) ∩ [tw, tw+stay_w) ≠ ∅
+    # Aggregated form — one constraint per (vi, p, l_inner, tv):
+    #   shift[vi] >= start[vi,p,l_inner,tv]
+    #                + Σ_{vj≠vi, tw: windows overlap} start[vj,p,l_outer,tw]
+    #                - 1
     #
-    # This is sound because if both start vars = 1, shift[v] is forced to 1.
-    # If either = 0, the constraint is slack (RHS ≤ 0).
+    # Tighter than the per-pair form: captures all blockers in one row.
+    # Complexity: O(V²T) constraints vs O(V²T²) previously.
 
     shift = {v['id']: pulp.LpVariable(f"sh_{v['id']}", cat='Binary')
              for v in scenario}
 
-    vdict = {v['id']: v for v in scenario}
+    # Precompute blocker start-time lists keyed by (vj_id, p, l_outer)
+    blocker_starts = {}
+    for vj in scenario:
+        vj_id = vj['id']
+        for (p, l) in slots[vj_id]:
+            blocker_starts[(vj_id, p, l)] = start_times[vj_id]
 
     shift_constraints_added = 0
     for vi in scenario:
-        vi_id = vi['id']
-        for vj in scenario:
-            vj_id = vj['id']
-            if vi_id == vj_id:
-                continue
-            # Find piers where vi can be in an inner layer and vj in an outer layer
-            vi_piers = set(VESSEL_SPECS[vi['type']]['assigned_piers'])
-            vj_piers = set(VESSEL_SPECS[vj['type']]['assigned_piers'])
-            shared_piers = vi_piers & vj_piers
-            for p in shared_piers:
-                n_layers = PIER_CONFIG[p]['layers']
-                for l_inner in range(1, n_layers):      # vi in inner layer
-                    for l_outer in range(l_inner):       # vj in outer (blocking) layer
-                        if (p, l_inner) not in slots[vi_id]:
-                            continue
-                        if (p, l_outer) not in slots[vj_id]:
-                            continue
-                        # Find overlapping start-time pairs
-                        for tv in start_times[vi_id]:
-                            for tw in start_times[vj_id]:
-                                # Check if occupation windows overlap
-                                vi_start, vi_end = tv, tv + vi['stay']
-                                vj_start, vj_end = tw, tw + vj['stay']
-                                if vi_start < vj_end and vj_start < vi_end:
-                                    prob += (
-                                        shift[vi_id] >= (
-                                            start[vi_id, p, l_inner, tv]
-                                            + start[vj_id, p, l_outer, tw]
-                                            - 1
-                                        ),
-                                        f"C7_{vi_id}_{vj_id}_{p}_{l_inner}_{l_outer}_{tv}_{tw}"
-                                    )
-                                    shift_constraints_added += 1
+        vi_id  = vi['id']
+        stay_i = vi['stay']
+        for (p, l_inner) in slots[vi_id]:
+            if l_inner == 0:
+                continue   # outermost layer — cannot be shifted
+            for tv in start_times[vi_id]:
+                vi_end = tv + stay_i
 
-    print(f"    Shifting constraints: {shift_constraints_added}")
+                # Collect all blocker start vars whose windows overlap [tv, vi_end)
+                blocker_terms = []
+                for vj in scenario:
+                    vj_id  = vj['id']
+                    if vj_id == vi_id:
+                        continue
+                    stay_j = vj['stay']
+                    for l_outer in range(l_inner):
+                        key = (vj_id, p, l_outer)
+                        if key not in blocker_starts:
+                            continue
+                        for tw in blocker_starts[key]:
+                            if tv < tw + stay_j and tw < vi_end:
+                                blocker_terms.append(start[vj_id, p, l_outer, tw])
+
+                if not blocker_terms:
+                    continue
+
+                prob += (
+                    shift[vi_id] >= (
+                        start[vi_id, p, l_inner, tv]
+                        + pulp.lpSum(blocker_terms)
+                        - 1
+                    ),
+                    f"C7_{vi_id}_{p}_{l_inner}_{tv}"
+                )
+                shift_constraints_added += 1
+
+    print(f"    Shifting constraints: {shift_constraints_added}  (O(V²T), was O(V²T²))")
 
     # ── Objective ─────────────────────────────────────────────────────────────
     # Full objective now matches GA raw accumulators:
