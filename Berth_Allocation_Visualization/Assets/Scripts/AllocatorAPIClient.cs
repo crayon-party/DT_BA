@@ -209,7 +209,7 @@ namespace Naval
 
             if (!health.Ok)
             {
-                Debug.LogError("[NavalApi] Server unreachable. Is naval_api_server.py running?");
+                Debug.LogError("[NavalApi] Server unreachable. Is server.py running?");
                 yield break;
             }
 
