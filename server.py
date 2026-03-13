@@ -61,7 +61,8 @@ from pydantic import BaseModel, Field
 # Import GA  (Naval_sim_core.py)
 # ---------------------------------------------------------------------------
 try:
-    from Naval_sim_core import NavalFinalOptimizer
+    from Naval_sim_core import NavalFinalOptimizer, VESSEL_SPECS as _VESSEL_SPECS_IMPORT
+    VESSEL_SPECS = _VESSEL_SPECS_IMPORT  # use the authoritative copy from Naval_sim_core
 except ImportError:
     try:
         from Batch_Allocation import NavalFinalOptimizer
@@ -214,7 +215,7 @@ def snapshot_to_dict(sim: NavalFinalOptimizer, session_id: str = "",
             "stay_h":   v["stay"],
         })
 
-    finished = sim.t >= horizon_h * 2
+    finished = sim.t >= horizon_h * 2  # matches Naval_sim_core.is_finished(max_h=horizon_h)
 
     return {
         "session_id":    session_id,
@@ -303,6 +304,13 @@ class WeatherRequest(BaseModel):
     duration_h: float = Field(4.0, gt=0)
 
 
+class WeatherEventRequest(BaseModel):
+    """Operator-triggered weather change — causes GA reschedule."""
+    session_id:  str
+    level:       int   = Field(..., ge=0, le=3)
+    duration_h:  float = Field(8.0, gt=0)
+
+
 class UncertaintyRequest(BaseModel):
     weather_prob:     Optional[float] = Field(None, ge=0.0, le=1.0)
     stay_noise_frac:  Optional[float] = Field(None, ge=0.0, le=1.0)
@@ -378,6 +386,14 @@ def delete_session(session_id: str):
     if session_id not in _sessions:
         raise HTTPException(404, f"Session '{session_id}' not found.")
     del _sessions[session_id]
+
+
+@app.delete("/sessions/all", tags=["Housekeeping"])
+def delete_all_sessions():
+    """Clear all sessions — call on Unity scene load to avoid accumulation."""
+    count = len(_sessions)
+    _sessions.clear()
+    return {"ok": True, "deleted": count}
     return {"ok": True, "deleted": session_id, "remaining": len(_sessions)}
 
 
@@ -490,6 +506,110 @@ def set_weather(req: WeatherRequest):
         }
     except Exception as e:
         raise HTTPException(500, str(e))
+
+
+@app.post("/set_weather_event", tags=["Simulation"])
+def set_weather_event(req: WeatherEventRequest):
+    """
+    Operator-triggered weather change with GA reschedule.
+
+    Workflow:
+      1. Record metrics before change
+      2. Force weather onto sim (locks out random override for duration)
+      3. Re-evaluate all waiting vessels against new weather limit
+         - Vessels that can no longer berth due to weather get delayed
+         - Vessels that were delayed but can now berth get re-queued
+      4. Return before/after metrics + affected vessel list
+    """
+    session = _get_session(req.session_id)
+    sim     = session.sim
+    t       = sim.t
+
+    # ── Snapshot BEFORE ──────────────────────────────────────────────────────
+    metrics_before = {
+        "shifting": sim.shifting,
+        "fatigue":  round(sim.fatigue, 2),
+        "delay":    round(sim.delay / 2, 2),
+        "combined": round(sim.shifting + sim.fatigue + sim.delay / 2, 2),
+    }
+
+    old_level = sim.weather_level
+
+    # ── Force weather ─────────────────────────────────────────────────────────
+    # Set level and a long rem so update_weather() won't randomise over it
+    sim.weather_level  = req.level
+    sim.weather_rem    = int(req.duration_h * 2) + 1   # +1 so first tick doesn't decrement to 0
+    sim._forced_weather = True   # flag checked in update_weather (see Naval_sim_core patch note)
+
+    # ── Reschedule: find affected vessels ────────────────────────────────────
+    affected = []
+    new_level = req.level
+
+    for v in sim.scenario:
+        spec         = VESSEL_SPECS.get(v["type"], {})
+        weather_limit = spec.get("weather_limit", 0)
+
+        # Vessel is waiting to arrive
+        if v["arr"] >= t:
+            if new_level > weather_limit:
+                # Weather too severe — push arrival forward by duration_h * 2 ticks
+                delay_ticks = int(req.duration_h * 2)
+                old_arr = v["arr"]
+                v["arr"] = max(v["arr"], t + delay_ticks)
+                if v["arr"] != old_arr:
+                    affected.append({
+                        "id":     v["id"],
+                        "type":   v["type"],
+                        "action": "arrival_delayed",
+                        "from":   old_arr // 2,
+                        "to":     v["arr"] // 2,
+                    })
+
+    # Berthed vessels that need to depart but weather prevents it
+    for pier, layers in sim.berths.items():
+        for l_idx, v in enumerate(layers):
+            if v is None:
+                continue
+            spec          = VESSEL_SPECS.get(v["type"], {})
+            weather_limit = spec.get("weather_limit", 0)
+            if new_level > weather_limit and v.get("act_dep", 9999) <= t + 4:
+                old_dep = v.get("act_dep", 0)
+                v["act_dep"] = t + int(req.duration_h * 2)
+                affected.append({
+                    "id":     v["id"],
+                    "type":   v["type"],
+                    "action": "departure_delayed",
+                    "pier":   pier,
+                    "layer":  l_idx,
+                    "from":   old_dep // 2,
+                    "to":     v["act_dep"] // 2,
+                })
+
+    # ── Snapshot AFTER ───────────────────────────────────────────────────────
+    metrics_after = {
+        "shifting": sim.shifting,
+        "fatigue":  round(sim.fatigue, 2),
+        "delay":    round(sim.delay / 2, 2),
+        "combined": round(sim.shifting + sim.fatigue + sim.delay / 2, 2),
+    }
+
+    weather_names = {0: "Clear", 1: "Light", 2: "Moderate", 3: "Storm"}
+    message = (
+        f"Weather changed: {weather_names.get(old_level,'?')} → "
+        f"{weather_names.get(new_level,'?')} "
+        f"({len(affected)} vessels rescheduled)"
+    )
+
+    return {
+        "ok":             True,
+        "message":        message,
+        "weather_level":  new_level,
+        "duration_h":     req.duration_h,
+        "affected":       affected,
+        "metrics_before": metrics_before,
+        "metrics_after":  metrics_after,
+        "state":          session.snapshot(),
+    }
 
 
 @app.post("/set_uncertainty", tags=["Simulation"])

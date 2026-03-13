@@ -8322,7 +8322,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 64235119}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 2.9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -8347,7 +8347,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 0, b: 0, a: 0.392}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -12459,7 +12459,19 @@ MonoBehaviour:
   m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1702610652}
+        m_TargetAssemblyTypeName: SimulationClock, Assembly-CSharp
+        m_MethodName: OnSpeedSliderChanged
+        m_Mode: 4
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!4 &96113769 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4482090286481970, guid: 370ca693295c48f48867c9cea154a390, type: 3}
@@ -27083,7 +27095,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &201097600
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -180884,7 +180896,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 0, b: 0, a: 0}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -206784,8 +206796,8 @@ MonoBehaviour:
   m_HandleRect: {fileID: 319119579}
   m_Direction: 0
   m_MinValue: 0
-  m_MaxValue: 1
-  m_WholeNumbers: 0
+  m_MaxValue: 3
+  m_WholeNumbers: 1
   m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -260266,7 +260278,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1702610651}
-  - component: {fileID: 1702610650}
+  - component: {fileID: 1702610652}
   m_Layer: 6
   m_Name: Simulation Clock
   m_TagString: Untagged
@@ -260274,18 +260286,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1702610650
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1702610649}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b4176277f44154e43a426abea22ae211, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &1702610651
 Transform:
   m_ObjectHideFlags: 0
@@ -260301,6 +260301,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1702610652
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1702610649}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a07d2b18183024c858bac1a6ffea2fd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SimulationClock
+  berthController: {fileID: 1809579689}
+  timeText: {fileID: 2098754719}
+  ticksPerSecond: 2
 --- !u!1001 &1703644794
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -263552,7 +263567,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -274321,7 +274336,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1772734956}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 6.4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -274346,7 +274361,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 0, b: 0, a: 0.392}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -279184,7 +279199,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1809579688}
-  - component: {fileID: 1809579687}
   - component: {fileID: 1809579689}
   m_Layer: 0
   m_Name: APIClient
@@ -279193,22 +279207,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1809579687
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1809579686}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 741339e67ea164e48a05845a14b5e809, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Naval.AllocatorAPIClient
-  ServerUrl: http://localhost:8000
-  HorizonH: 168
-  Seed: 42
-  Mode: GA
 --- !u!4 &1809579688
 Transform:
   m_ObjectHideFlags: 0
@@ -333129,10 +333127,10 @@ SceneRoots:
   - {fileID: 1969328022}
   - {fileID: 1702610651}
   - {fileID: 1467622}
-  - {fileID: 201097601}
   - {fileID: 2041914431}
   - {fileID: 19401189}
   - {fileID: 1843794940}
   - {fileID: 1341573504}
   - {fileID: 65199302}
+  - {fileID: 201097601}
   - {fileID: 1809579688}

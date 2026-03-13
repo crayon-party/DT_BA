@@ -196,12 +196,12 @@ namespace Naval
         // Scene lifecycle
         // =====================================================================
 
-        void Start()
+        protected virtual void Start()
         {
             StartCoroutine(StartupSequence());
         }
 
-        private IEnumerator StartupSequence()
+        protected IEnumerator StartupSequence()
         {
             // 1. Health check
             var health = new HttpResult();
