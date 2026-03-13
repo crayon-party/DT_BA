@@ -33,58 +33,44 @@ public class PortVisualizer : MonoBehaviour
     public TMP_Text metricsText;
 
     [Header("Screen Effects")]
-    public UnityEngine.UI.Image nightTint;   // black
-    public UnityEngine.UI.Image weatherTint; // white
+    public UnityEngine.UI.Image nightTint;
+    public UnityEngine.UI.Image weatherTint;
+
+    private static readonly string[] WeatherNames = { "Clear", "Light", "Moderate", "Storm" };
 
     // One ShipView per physical ship
     private Dictionary<string, ShipView> ships = new Dictionary<string, ShipView>();
 
-    // Stable ID stripping time step
-    private string GetPhysicalShipId(ShipState state)
-    {
-        //if (string.IsNullOrEmpty(state.id)) return "";
-        //int idx = state.id.IndexOf('_');
-        //return idx > 0 ? state.id.Substring(0, idx) : state.id;
-        return state.id;
-    }
+    private string GetPhysicalShipId(ShipState state) => state.id;
 
-    // Apply a full snapshot
     public void ApplyState(StateMessage state)
     {
         UpdateShips(state.ships);
         UpdateGlobalUI(state);
     }
 
-    // Update or create ships
     private void UpdateShips(ShipState[] shipStates)
     {
         foreach (var state in shipStates)
         {
             string pid = GetPhysicalShipId(state);
-
             if (!ships.TryGetValue(pid, out ShipView ship))
             {
                 ship = CreateShip(state);
                 ships[pid] = ship;
             }
-
             PositionShip(ship, state);
         }
     }
 
-    // Instantiate a new ship
     private ShipView CreateShip(ShipState state)
     {
         GameObject go = Instantiate(shipPrefab);
         go.name = $"Ship_{GetPhysicalShipId(state)}";
-
-        // Only scale once
         go.transform.localScale = new Vector3(30f, 10f, 80f);
-
         return go.GetComponent<ShipView>();
     }
 
-    // Update ship position, rotation, and state
     private void PositionShip(ShipView shipView, ShipState state)
     {
         shipView.SetState(state);
@@ -102,7 +88,7 @@ public class PortVisualizer : MonoBehaviour
                 slotIdx < slotPositions[pierIdx].slots.Length)
             {
                 Vector3 pos = slotPositions[pierIdx].slots[slotIdx].position;
-                pos.y = 0.5f; // safe above ground
+                pos.y = 0.5f;
                 shipView.transform.position = pos;
                 shipView.transform.rotation = Quaternion.identity;
                 return;
@@ -113,74 +99,77 @@ public class PortVisualizer : MonoBehaviour
         if (anchorageOrigin != null)
         {
             int idHash = Mathf.Abs(state.id.GetHashCode());
-            float spacing = anchorageSpacing;
-
             int col = idHash % anchorageColumns;
-            int row = (idHash / anchorageColumns) % anchorageColumns; // MOD to keep in bounds
-
-            Vector3 offset = new Vector3(col * spacing, 0.5f, row * spacing);
+            int row = (idHash / anchorageColumns) % anchorageColumns;
+            Vector3 offset = new Vector3(col * anchorageSpacing, 0.5f, row * anchorageSpacing);
             shipView.transform.position = anchorageOrigin.position + offset;
-            shipView.transform.rotation = Quaternion.identity; // flat, not rotated
+            shipView.transform.rotation = Quaternion.identity;
         }
         else
         {
-            shipView.transform.position = new Vector3(0.0f, 0.5f, 0.0f);
+            shipView.transform.position = new Vector3(0f, 0.5f, 0f);
             shipView.transform.rotation = Quaternion.identity;
         }
     }
 
-    // Placeholder for UI updates (optional)
     private void UpdateGlobalUI(StateMessage state)
     {
-        // Weather, night/day indicators, KPIs, etc.
-
-        // Time
+        // ── Time — convert hours to Day X  HH:MM ─────────────────────────────
         if (timeText != null)
-            timeText.text = $"Time: {state.time} mins";
+        {
+            int totalHours = state.time;
+            int day = (totalHours / 24) + 1;
+            int hour = totalHours % 24;
+            timeText.text = $"Day {day}  {hour:D2}:00";
+        }
 
-        // Weather
+        // ── Weather ───────────────────────────────────────────────────────────
         if (weatherText != null)
-            weatherText.text = $"Weather: {state.weather}";
+        {
+            string name = WeatherNames[Mathf.Clamp(state.weather, 0, 3)];
+            weatherText.text = $"Weather: {name}";
+        }
 
-        // Night / Day
+        // ── Night / Day ───────────────────────────────────────────────────────
         if (nightText != null)
             nightText.text = state.is_night ? "Night" : "Day";
 
-        // Lunch
+        // ── Lunch ─────────────────────────────────────────────────────────────
         if (lunchText != null)
-            lunchText.text = state.is_lunch ? "Lunch Time" : "Working";
+            lunchText.text = state.is_lunch ? "Lunch Break" : "Working";
 
-        // Ships at berth
+        // ── Ships at berth ────────────────────────────────────────────────────
         if (shipsAtBerthText != null && state.ships != null)
         {
-            int atBerth = System.Array.FindAll(state.ships, s => !string.IsNullOrEmpty(s.pier) && s.layer >= 0).Length;
+            int atBerth = System.Array.FindAll(
+                state.ships, s => !string.IsNullOrEmpty(s.pier) && s.layer >= 0).Length;
             shipsAtBerthText.text = $"Ships at Berth: {atBerth}";
         }
 
-        // Tugs status
+        // ── Tugs ──────────────────────────────────────────────────────────────
         if (tugStatusText != null && state.tugs != null)
         {
-            string tugInfo = "";
+            var sb = new System.Text.StringBuilder();
             foreach (var tug in state.tugs)
-            {
-                tugInfo += $"{tug.id}: {tug.status} (Free: {tug.free_time} mins)\n";
-            }
-            tugStatusText.text = tugInfo;
+                sb.AppendLine($"{tug.id}: {tug.status}");
+            tugStatusText.text = sb.ToString();
         }
 
-        // Metrics
+        // ── Metrics ───────────────────────────────────────────────────────────
         if (metricsText != null && state.metrics != null)
         {
             metricsText.text =
                 $"Shifting: {state.metrics.shifting}\n" +
-                $"Fatigue: {state.metrics.fatigue:F2}\n" +
-                $"Delay: {state.metrics.delay:F2}";
+                $"Fatigue:  {state.metrics.fatigue:F1}\n" +
+                $"Delay:    {state.metrics.delay:F1}h";
         }
+
         UpdateScreenEffects(state);
     }
+
     private void UpdateScreenEffects(StateMessage state)
     {
-        // --- Night ---
+        // Night tint
         if (nightTint != null)
         {
             Color c = Color.black;
@@ -188,7 +177,7 @@ public class PortVisualizer : MonoBehaviour
             nightTint.color = c;
         }
 
-        // --- Weather ---
+        // Weather tint
         if (weatherTint != null)
         {
             float alpha = state.weather switch
