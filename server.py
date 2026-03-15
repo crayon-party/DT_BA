@@ -116,15 +116,18 @@ _uncertainty: Dict[str, Any] = {
 def build_ga_scenario(
     horizon_h: int = DEFAULT_HORIZON_H,
     seed: int = DEFAULT_SEED,
+    vessel_counts: Dict[str, int] = None,   # override per-type counts e.g. {"K":2,"P":20}
 ) -> List[Dict[str, Any]]:
     """
     Procedurally generate a vessel manifest in GA format (half-hour ticks).
     Respects current _uncertainty params (stay_noise_frac, arrival_jitter).
+    vessel_counts overrides the default count for each vessel type.
     """
     random.seed(seed)
     scenario: List[Dict[str, Any]] = []
     for vtype, info in VESSEL_SPECS.items():
-        for i in range(info["count"]):
+        count = (vessel_counts or {}).get(vtype, info["count"])
+        for i in range(count):
             curr_h = random.randint(0, min(info["cycle"], horizon_h))
             while curr_h < horizon_h:
                 stay = random.randint(*info["stay_range"])
@@ -283,6 +286,8 @@ class UnityState(BaseModel):
     horizon_h:        int                  = Field(DEFAULT_HORIZON_H)
     seed:             int                  = Field(DEFAULT_SEED)
     mode:             str                  = Field("GA", description="'GA' or 'FCFS'")
+    vessel_counts:    Optional[Dict[str, int]] = Field(None,
+                          description="Override vessel count per type e.g. {K:2, F:8, L:4, P:20}")
     current_time:     int                  = Field(0, ge=0,
                                                    description="Fast-forward to this tick")
     weather_override: Optional[int]        = Field(None, ge=0, le=3,
@@ -423,7 +428,7 @@ def init_scenario(state: UnityState):
                 "state": _sessions[sid].snapshot()}
 
     scenario = state.scenario if state.scenario else build_ga_scenario(
-        state.horizon_h, state.seed)
+        state.horizon_h, state.seed, state.vessel_counts)
 
     try:
         session = Session(
@@ -448,14 +453,20 @@ def init_scenario(state: UnityState):
         session.sim.weather_level = state.weather_override
 
     _sessions[sid] = session
+
+    # Count vessels by type for debug log
+    from collections import Counter
+    type_counts = dict(Counter(v["type"] for v in scenario))
+
     return {
-        "session_id": sid,
-        "reused":     False,
-        "vessels":    len(scenario),
-        "horizon_h":  state.horizon_h,
-        "seed":       state.seed,
-        "mode":       state.mode,
-        "state":      session.snapshot(),
+        "session_id":   sid,
+        "reused":       False,
+        "vessels":      len(scenario),
+        "vessel_counts": type_counts,   # e.g. {"K":3,"F":5,"L":4,"P":12}
+        "horizon_h":    state.horizon_h,
+        "seed":         state.seed,
+        "mode":         state.mode,
+        "state":        session.snapshot(),
     }
 
 

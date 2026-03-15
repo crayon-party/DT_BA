@@ -20400,6 +20400,7 @@ RectTransform:
   - {fileID: 657411709}
   - {fileID: 1210982254}
   - {fileID: 64235120}
+  - {fileID: 652271190}
   m_Father: {fileID: 1341573504}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -20452,7 +20453,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 153800854}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0bebacd34343b4002a5b44b123e55af5, type: 3}
   m_Name: 
@@ -20465,7 +20466,6 @@ MonoBehaviour:
   vesselCountLInput: {fileID: 1970875620}
   vesselCountPInput: {fileID: 2131008645}
   modeDropdown: {fileID: 775949564}
-  SetScenarioButton: {fileID: 913587580}
   weatherDropdown: {fileID: 1379177336}
   durationInput: {fileID: 251350866}
   rescheduleButton: {fileID: 1593435700}
@@ -97686,12 +97686,12 @@ GameObject:
   - component: {fileID: 652271192}
   - component: {fileID: 652271191}
   m_Layer: 5
-  m_Name: Res-Panel
+  m_Name: Result Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &652271190
 RectTransform:
   m_ObjectHideFlags: 0
@@ -97710,12 +97710,12 @@ RectTransform:
   - {fileID: 823375273}
   - {fileID: 724868631}
   - {fileID: 439536644}
-  m_Father: {fileID: 1341573504}
+  m_Father: {fileID: 153800855}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 533, y: -231.59753}
-  m_SizeDelta: {x: -1096.7, y: -502.2842}
+  m_AnchoredPosition: {x: 0.14001465, y: -371.84088}
+  m_SizeDelta: {x: -31, y: -221.49432}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &652271191
 MonoBehaviour:
@@ -129070,7 +129070,6 @@ MonoBehaviour:
   vesselCountLInput: {fileID: 0}
   vesselCountPInput: {fileID: 0}
   modeDropdown: {fileID: 0}
-  SetScenarioButton: {fileID: 0}
   weatherDropdown: {fileID: 0}
   durationInput: {fileID: 0}
   rescheduleButton: {fileID: 0}
@@ -139037,13 +139036,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
+      - m_Target: {fileID: 1507767140}
+        m_TargetAssemblyTypeName: OperatorPanel, Assembly-CSharp
+        m_MethodName: OnApplyScenarioClicked
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -186440,7 +186439,6 @@ MonoBehaviour:
   vesselCountLInput: {fileID: 0}
   vesselCountPInput: {fileID: 0}
   modeDropdown: {fileID: 0}
-  SetScenarioButton: {fileID: 0}
   weatherDropdown: {fileID: 0}
   durationInput: {fileID: 0}
   rescheduleButton: {fileID: 0}
@@ -207122,7 +207120,6 @@ RectTransform:
   - {fileID: 1409191698}
   - {fileID: 1720215803}
   - {fileID: 1175249365}
-  - {fileID: 652271190}
   - {fileID: 1685292165}
   - {fileID: 1822856238}
   - {fileID: 1706709435}
@@ -229404,7 +229401,6 @@ MonoBehaviour:
   vesselCountLInput: {fileID: 0}
   vesselCountPInput: {fileID: 0}
   modeDropdown: {fileID: 0}
-  SetScenarioButton: {fileID: 0}
   weatherDropdown: {fileID: 0}
   durationInput: {fileID: 0}
   rescheduleButton: {fileID: 0}
@@ -233462,6 +233458,69 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1507455302}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1507767139
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1507767141}
+  - component: {fileID: 1507767140}
+  m_Layer: 0
+  m_Name: Operator Panel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1507767140
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1507767139}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0bebacd34343b4002a5b44b123e55af5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OperatorPanel
+  berthController: {fileID: 1809579689}
+  seedInput: {fileID: 2076054727}
+  horizonInput: {fileID: 462487839}
+  vesselCountKInput: {fileID: 882339795}
+  vesselCountFInput: {fileID: 1216676750}
+  vesselCountLInput: {fileID: 1970875620}
+  vesselCountPInput: {fileID: 2131008645}
+  modeDropdown: {fileID: 775949564}
+  weatherDropdown: {fileID: 1379177336}
+  durationInput: {fileID: 251350866}
+  rescheduleButton: {fileID: 1593435700}
+  resultSection: {fileID: 652271189}
+  resultMessageText: {fileID: 96042699}
+  resultDelayText: {fileID: 157804852}
+  resultShiftingText: {fileID: 823375274}
+  resultAffectedText: {fileID: 724868632}
+  resultDetailText: {fileID: 439536645}
+  panelContent: {fileID: 153800854}
+  statusText: {fileID: 859210594}
+--- !u!4 &1507767141
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1507767139}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1254.1136, y: 0, z: 313.89728}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1508475158 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1203759563951042, guid: c456dd5bb2ab12f4bb5d7e522a37ec5d, type: 3}
@@ -247060,13 +247119,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
+      - m_Target: {fileID: 1507767140}
+        m_TargetAssemblyTypeName: OperatorPanel, Assembly-CSharp
+        m_MethodName: OnRescheduleClicked
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -331977,3 +332036,4 @@ SceneRoots:
   - {fileID: 65199302}
   - {fileID: 201097601}
   - {fileID: 1809579688}
+  - {fileID: 1507767141}
