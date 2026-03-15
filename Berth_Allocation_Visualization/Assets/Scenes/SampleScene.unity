@@ -20461,21 +20461,19 @@ MonoBehaviour:
   berthController: {fileID: 1809579689}
   seedInput: {fileID: 2076054727}
   horizonInput: {fileID: 462487839}
-  vesselCountKInput: {fileID: 882339795}
-  vesselCountFInput: {fileID: 1216676750}
-  vesselCountLInput: {fileID: 1970875620}
-  vesselCountPInput: {fileID: 2131008645}
+  vesselKInput: {fileID: 0}
+  vesselFInput: {fileID: 0}
+  vesselLInput: {fileID: 0}
+  vesselPInput: {fileID: 0}
   modeDropdown: {fileID: 775949564}
   weatherDropdown: {fileID: 1379177336}
   durationInput: {fileID: 251350866}
-  rescheduleButton: {fileID: 1593435700}
   resultSection: {fileID: 652271189}
   resultMessageText: {fileID: 96042699}
   resultDelayText: {fileID: 157804852}
   resultShiftingText: {fileID: 823375274}
   resultAffectedText: {fileID: 724868632}
   resultDetailText: {fileID: 439536645}
-  panelContent: {fileID: 153800854}
   statusText: {fileID: 859210594}
 --- !u!4 &154191615 stripped
 Transform:
@@ -95989,7 +95987,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 2131008644}
+  - {fileID: 882339794}
   m_Father: {fileID: 1210982254}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -129065,21 +129063,19 @@ MonoBehaviour:
   berthController: {fileID: 0}
   seedInput: {fileID: 0}
   horizonInput: {fileID: 0}
-  vesselCountKInput: {fileID: 0}
-  vesselCountFInput: {fileID: 0}
-  vesselCountLInput: {fileID: 0}
-  vesselCountPInput: {fileID: 0}
+  vesselKInput: {fileID: 0}
+  vesselFInput: {fileID: 0}
+  vesselLInput: {fileID: 0}
+  vesselPInput: {fileID: 0}
   modeDropdown: {fileID: 0}
   weatherDropdown: {fileID: 0}
   durationInput: {fileID: 0}
-  rescheduleButton: {fileID: 0}
   resultSection: {fileID: 0}
   resultMessageText: {fileID: 0}
   resultDelayText: {fileID: 0}
   resultShiftingText: {fileID: 0}
   resultAffectedText: {fileID: 0}
   resultDetailText: {fileID: 0}
-  panelContent: {fileID: 0}
   statusText: {fileID: 0}
 --- !u!114 &847785024
 MonoBehaviour:
@@ -133940,11 +133936,11 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 703059425}
-  m_Father: {fileID: 945582945}
+  m_Father: {fileID: 640018235}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 40.900024, y: -63.399975}
+  m_AnchoredPosition: {x: 40.900024, y: -0.19996262}
   m_SizeDelta: {x: 71.6296, y: 18.913}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &882339795
@@ -139038,7 +139034,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1507767140}
         m_TargetAssemblyTypeName: OperatorPanel, Assembly-CSharp
-        m_MethodName: OnApplyScenarioClicked
+        m_MethodName: OnNewSimulationClicked
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -144346,7 +144342,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 882339794}
+  - {fileID: 2131008644}
   m_Father: {fileID: 1210982254}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -186434,21 +186430,19 @@ MonoBehaviour:
   berthController: {fileID: 0}
   seedInput: {fileID: 0}
   horizonInput: {fileID: 0}
-  vesselCountKInput: {fileID: 0}
-  vesselCountFInput: {fileID: 0}
-  vesselCountLInput: {fileID: 0}
-  vesselCountPInput: {fileID: 0}
+  vesselKInput: {fileID: 0}
+  vesselFInput: {fileID: 0}
+  vesselLInput: {fileID: 0}
+  vesselPInput: {fileID: 0}
   modeDropdown: {fileID: 0}
   weatherDropdown: {fileID: 0}
   durationInput: {fileID: 0}
-  rescheduleButton: {fileID: 0}
   resultSection: {fileID: 0}
   resultMessageText: {fileID: 0}
   resultDelayText: {fileID: 0}
   resultShiftingText: {fileID: 0}
   resultAffectedText: {fileID: 0}
   resultDetailText: {fileID: 0}
-  panelContent: {fileID: 0}
   statusText: {fileID: 0}
 --- !u!114 &1210982256
 MonoBehaviour:
@@ -229396,21 +229390,19 @@ MonoBehaviour:
   berthController: {fileID: 0}
   seedInput: {fileID: 0}
   horizonInput: {fileID: 0}
-  vesselCountKInput: {fileID: 0}
-  vesselCountFInput: {fileID: 0}
-  vesselCountLInput: {fileID: 0}
-  vesselCountPInput: {fileID: 0}
+  vesselKInput: {fileID: 0}
+  vesselFInput: {fileID: 0}
+  vesselLInput: {fileID: 0}
+  vesselPInput: {fileID: 0}
   modeDropdown: {fileID: 0}
   weatherDropdown: {fileID: 0}
   durationInput: {fileID: 0}
-  rescheduleButton: {fileID: 0}
   resultSection: {fileID: 0}
   resultMessageText: {fileID: 0}
   resultDelayText: {fileID: 0}
   resultShiftingText: {fileID: 0}
   resultAffectedText: {fileID: 0}
   resultDetailText: {fileID: 0}
-  panelContent: {fileID: 0}
   statusText: {fileID: 0}
 --- !u!114 &1482222050
 MonoBehaviour:
@@ -233490,21 +233482,19 @@ MonoBehaviour:
   berthController: {fileID: 1809579689}
   seedInput: {fileID: 2076054727}
   horizonInput: {fileID: 462487839}
-  vesselCountKInput: {fileID: 882339795}
-  vesselCountFInput: {fileID: 1216676750}
-  vesselCountLInput: {fileID: 1970875620}
-  vesselCountPInput: {fileID: 2131008645}
+  vesselKInput: {fileID: 2131008645}
+  vesselFInput: {fileID: 1216676750}
+  vesselLInput: {fileID: 1970875620}
+  vesselPInput: {fileID: 882339795}
   modeDropdown: {fileID: 775949564}
   weatherDropdown: {fileID: 1379177336}
   durationInput: {fileID: 251350866}
-  rescheduleButton: {fileID: 1593435700}
   resultSection: {fileID: 652271189}
   resultMessageText: {fileID: 96042699}
   resultDelayText: {fileID: 157804852}
   resultShiftingText: {fileID: 823375274}
   resultAffectedText: {fileID: 724868632}
   resultDetailText: {fileID: 439536645}
-  panelContent: {fileID: 153800854}
   statusText: {fileID: 859210594}
 --- !u!4 &1507767141
 Transform:
@@ -247121,7 +247111,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1507767140}
         m_TargetAssemblyTypeName: OperatorPanel, Assembly-CSharp
-        m_MethodName: OnRescheduleClicked
+        m_MethodName: OnInjectWeatherClicked
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -329776,11 +329766,11 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1745679126}
-  m_Father: {fileID: 640018235}
+  m_Father: {fileID: 945582945}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 40.900024, y: 62.699974}
+  m_AnchoredPosition: {x: 40.900024, y: -0.50003815}
   m_SizeDelta: {x: 71.6296, y: 18.913}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2131008645
