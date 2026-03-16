@@ -457,6 +457,10 @@ def init_scenario(state: UnityState):
     # Count vessels by type for debug log
     from collections import Counter
     type_counts = dict(Counter(v["type"] for v in scenario))
+    counts_str = "  ".join(f"{k}:{v}" for k, v in sorted(type_counts.items()))
+    print(f"[naval-api] NEW SESSION {sid[:8]}... | "
+          f"{len(scenario)} vessels ({counts_str}) | "
+          f"horizon={state.horizon_h}h | seed={state.seed} | mode={state.mode}")
 
     return {
         "session_id":   sid,
@@ -610,6 +614,13 @@ def set_weather_event(req: WeatherEventRequest):
         f"{weather_names.get(new_level,'?')} "
         f"({len(affected)} vessels rescheduled)"
     )
+
+    print(f"[naval-api] WEATHER EVENT | {message} | "
+          f"delay {metrics_before['delay']:.1f}h → {metrics_after['delay']:.1f}h | "
+          f"shifting {metrics_before['shifting']} → {metrics_after['shifting']}")
+    for v in affected:
+        print(f"  {v['id']} ({v['type']}): {v['action']}  "
+              f"{v['from']:.0f}h → {v['to']:.0f}h")
 
     return {
         "ok":             True,
