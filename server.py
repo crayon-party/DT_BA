@@ -61,11 +61,11 @@ from pydantic import BaseModel, Field
 # Import GA  (Naval_sim_core.py)
 # ---------------------------------------------------------------------------
 try:
-    from Naval_sim_core import NavalFinalOptimizer, VESSEL_SPECS as _VESSEL_SPECS_IMPORT
-    VESSEL_SPECS = _VESSEL_SPECS_IMPORT  # use the authoritative copy from Naval_sim_core
+    from Naval_sim_em_heuristics import NavalFinalOptimizer, VESSEL_SPECS as _VESSEL_SPECS_IMPORT
+    VESSEL_SPECS = _VESSEL_SPECS_IMPORT  # use the authoritative copy from Naval_sim_em_heuristics
 except ImportError:
     try:
-        from Batch_Allocation import NavalFinalOptimizer
+        from Naval_sim_emissions import NavalFinalOptimizer
     except ImportError:
         print("[ERROR] Could not import NavalFinalOptimizer.")
         print("        Place Naval_sim_core.py alongside this file.")
@@ -228,10 +228,11 @@ def snapshot_to_dict(sim: NavalFinalOptimizer, session_id: str = "",
         "weather_rem":   sim.weather_rem,
         "finished":      finished,
         "metrics": {
-            "shifting": sim.shifting,
-            "fatigue":  round(sim.fatigue, 2),
-            "delay":    round(sim.delay / 2, 2),
-            "combined": round(sim.shifting + sim.fatigue + sim.delay / 2, 2),
+            "shifting":  sim.shifting,
+            "fatigue":   round(sim.fatigue, 2),
+            "delay":     round(sim.delay / 2, 2),
+            "emissions": round(getattr(sim, "emissions", 0.0) / 1000, 2),  # kg → tonnes
+            "combined":  round(sim.shifting + sim.fatigue + sim.delay / 2, 2),
         },
         "berths":  berths,
         "vessels": vessels,
@@ -246,14 +247,27 @@ class Session:
     """Wraps a live simulator with its associated metadata."""
 
     def __init__(self, session_id: str, scenario: List[Dict], horizon_h: int,
-                 seed: int, mode: str):
+                 seed: int, mode: str,
+                 alpha: float = 0.25, beta: float = 0.25,
+                 gamma: float = 0.25, delta: float = 0.25):
         self.session_id = session_id
         self.scenario   = scenario
         self.horizon_h  = horizon_h
         self.seed       = seed
         self.mode       = mode
         self.sim        = NavalFinalOptimizer(scenario, mode=mode, record_log=False)
+        self.sim.alpha  = alpha
+        self.sim.beta   = beta
+        self.sim.gamma  = gamma
+        self.sim.delta  = delta
         self.created_at = time.time()
+
+    def set_weights(self, alpha: float, beta: float, gamma: float, delta: float):
+        """Update operator weights on the running sim."""
+        self.sim.alpha = alpha
+        self.sim.beta  = beta
+        self.sim.gamma = gamma
+        self.sim.delta = delta
 
     def snapshot(self) -> Dict[str, Any]:
         return snapshot_to_dict(self.sim, self.session_id, self.horizon_h)
@@ -314,6 +328,15 @@ class WeatherEventRequest(BaseModel):
     session_id:  str
     level:       int   = Field(..., ge=0, le=3)
     duration_h:  float = Field(8.0, gt=0)
+
+
+class WeightRequest(BaseModel):
+    """Operator priority weights for the multi-objective GA fitness function."""
+    session_id: str
+    alpha: float = Field(0.25, ge=0.0, le=1.0, description="Shifting weight")
+    beta:  float = Field(0.25, ge=0.0, le=1.0, description="Fatigue weight")
+    gamma: float = Field(0.25, ge=0.0, le=1.0, description="Delay weight")
+    delta: float = Field(0.25, ge=0.0, le=1.0, description="Emission weight")
 
 
 class UncertaintyRequest(BaseModel):
@@ -631,6 +654,38 @@ def set_weather_event(req: WeatherEventRequest):
         "metrics_before": metrics_before,
         "metrics_after":  metrics_after,
         "state":          session.snapshot(),
+    }
+
+
+@app.post("/set_weights", tags=["Simulation"])
+def set_weights(req: WeightRequest):
+    """
+    Update the multi-objective GA priority weights mid-simulation.
+
+    Weights must sum to 1.0 (Unity enforces this via slider constraint).
+    Takes effect on the very next sim.step() call.
+
+    alpha = shifting weight
+    beta  = fatigue weight
+    gamma = delay weight
+    delta = emission weight
+    """
+    session = _get_session(req.session_id)
+    total   = req.alpha + req.beta + req.gamma + req.delta
+    if total <= 0:
+        raise HTTPException(400, "Weights must sum to > 0")
+    # Normalise in case of floating point drift
+    alpha = req.alpha / total
+    beta  = req.beta  / total
+    gamma = req.gamma / total
+    delta = req.delta / total
+    session.set_weights(alpha, beta, gamma, delta)
+    return {
+        "ok":    True,
+        "alpha": round(alpha, 4),
+        "beta":  round(beta,  4),
+        "gamma": round(gamma, 4),
+        "delta": round(delta, 4),
     }
 
 

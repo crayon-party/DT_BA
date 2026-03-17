@@ -193,4 +193,11 @@ public class PortVisualizer : MonoBehaviour
             weatherTint.color = c;
         }
     }
+    public void ClearAllShips()
+    {
+        foreach (var ship in ships.Values)
+            if (ship != null) Destroy(ship.gameObject);
+        ships.Clear();
+    }
+
 }
