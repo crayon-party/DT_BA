@@ -154,27 +154,30 @@ def run_mode(mode, delta=0.0):
     for seed in SEEDS:
         random.seed(seed)
         scen = generate_scenario(max_h=HORIZON)
-        sim = NavalFinalOptimizer(scen, mode=mode, record_log=False)
+        sim  = NavalFinalOptimizer(scen, mode=mode, record_log=False)
         if mode == 'GA':
-            w = (1 - delta) / 3
-            sim.alpha = w;
-            sim.beta = w;
-            sim.gamma = w;
-            sim.delta = delta
+            # delay gets double weight, shifting and fatigue share the rest equally
+            # alpha=shifting, beta=fatigue, gamma=delay, delta=emission
+            remaining = 1.0 - delta          # weight left after emission
+            sim.alpha = remaining * 0.25     # shifting: 25% of remaining
+            sim.beta  = remaining * 0.25     # fatigue:  25% of remaining
+            sim.gamma = remaining * 0.50     # delay:    50% of remaining
+            sim.delta = delta                # emission: operator sweep
         results.append(sim.run(max_h=HORIZON))
     return (
-        statistics.mean([r['shifting'] for r in results]),
-        statistics.mean([r['fatigue'] for r in results]),
-        statistics.mean([r['delay'] for r in results]),
+        statistics.mean([r['shifting']  for r in results]),
+        statistics.mean([r['fatigue']   for r in results]),
+        statistics.mean([r['delay']     for r in results]),
         statistics.mean([r['emissions'] for r in results]),
     )
 
 
 def z_score(s, f, d, e, delta=0.0):
-    if delta == 0.0:
-        return 0.25 * (s / S_REF) + 0.25 * (f / F_REF) + 0.25 * (d / D_REF) + 0.25 * (e / E_REF)
-    w = (1 - delta) / 3
-    return w * (s / S_REF) + w * (f / F_REF) + w * (d / D_REF) + delta * (e / E_REF)
+    remaining = 1.0 - delta
+    a = remaining * 0.25   # shifting weight
+    b = remaining * 0.25   # fatigue weight
+    g = remaining * 0.50   # delay weight
+    return a*(s/S_REF) + b*(f/F_REF) + g*(d/D_REF) + delta*(e/E_REF)
 
 
 # ── Run all methods ───────────────────────────────────────────────────────────

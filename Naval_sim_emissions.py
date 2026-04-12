@@ -201,7 +201,7 @@ class NavalFinalOptimizer:
                         # cost already incurred by waiting. Once accumulated cost exceeds fatigue
                         # cost, berth immediately regardless of time of day.
                         # Hard cap: never defer more than MAX_NIGHT_DEFER ticks (~12h)
-                        MAX_NIGHT_DEFER = 12  # ticks = 6 hours (operational cap: no vessel held >6h for night timing)
+                        MAX_NIGHT_DEFER = 6  # ticks = 3 hours (operational cap: no vessel held >6h for night timing)
                         _beta = getattr(self, 'beta', 0.25)
                         _gamma = getattr(self, 'gamma', 0.25)
                         _delta = getattr(self, 'delta', 0.25)

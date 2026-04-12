@@ -935,3 +935,18 @@ if __name__ == "__main__":
         reload=args.reload,
         log_level="info",
     )
+
+if __name__ == "__main__":
+    from app.Generator import generate_blocks, save_blocks_to_csv, load_bays
+    from app.Models import GenerationConfig
+
+    bays = load_bays("bay_data.csv")
+    result = generate_blocks(bays, GenerationConfig(n_blocks=50, seed=42))
+    save_blocks_to_csv(result.blocks, "output.csv")
+    print(f"Generated {result.total_generated} blocks")
+
+    start_server()
+
+    import time
+    while True:
+        time.sleep(1)

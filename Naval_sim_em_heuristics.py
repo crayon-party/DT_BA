@@ -108,6 +108,7 @@ class NavalFinalOptimizer:
         e_idle = VESSEL_SPECS[v['type']]['e_idle']
 
         # Normalised terms scaled to SCALE anchor
+        penalty += alpha * (self.shifting / S_REF) * SCALE  # shifting penalty
         penalty += beta * (curr_f / F_REF) * SCALE  # fatigue
         penalty -= gamma * (wait_time / D_REF) * SCALE  # wait reward
         penalty -= delta * (e_idle * wait_h / E_REF) * SCALE  # emission reward: prioritise high-emitting vessels
@@ -135,20 +136,20 @@ class NavalFinalOptimizer:
         for p, i, v in sorted(out_list, key=lambda x: VESSEL_SPECS[x[2]['type']]['readiness'], reverse=True):
             spec = VESSEL_SPECS[v['type']]
             if w_lvl <= spec['weather_limit'] and avail_tugs >= spec['tugs']:
-                if self.mode == 'GA' and self.is_night(t):
+                #if self.mode == 'GA' and self.is_night(t):
                     # Multi-criteria night suppression for departures:
                     # Defer only if fatigue cost exceeds accumulated overdue delay
-                    _beta = getattr(self, 'beta', 0.25)
-                    _gamma = getattr(self, 'gamma', 0.25)
-                    _delta = getattr(self, 'delta', 0.25)
-                    _overdue = max(0, t - v.get('dep_t', t))  # ticks past planned departure
-                    _f_cost = _beta * (self.calculate_vessel_fatigue(v['id'], v['type'], t) / F_REF)
-                    _d_cost = _gamma * (_overdue / D_REF)
-                    _e_cost = _delta * (VESSEL_SPECS[v['type']]['e_idle'] * _overdue * 0.5 / E_REF)
-                    if _f_cost > (_d_cost + _e_cost):
-                        v['act_dep'] += 1
-                        self.delay += 0.5
-                        continue
+                  #  _beta = getattr(self, 'beta', 0.25)
+                  #  _gamma = getattr(self, 'gamma', 0.25)
+                 #   _delta = getattr(self, 'delta', 0.25)
+                  #  _overdue = max(0, t - v.get('dep_t', t))  # ticks past planned departure
+                  #  _f_cost = _beta * (self.calculate_vessel_fatigue(v['id'], v['type'], t) / F_REF)
+                  #  _d_cost = _gamma * (_overdue / D_REF)
+                  #  _e_cost = _delta * (VESSEL_SPECS[v['type']]['e_idle'] * _overdue * 0.5 / E_REF)
+                  #  if _f_cost > (_d_cost + _e_cost):
+                 #       v['act_dep'] += 1
+                  #      self.delay += 0.5
+                  #      continue
                 blockers = [self.berths[p][j] for j in range(i + 1, len(self.berths[p])) if self.berths[p][j]]
                 if not blockers:
                     assigned = 0
@@ -204,7 +205,7 @@ class NavalFinalOptimizer:
                         # cost already incurred by waiting. Once accumulated cost exceeds fatigue
                         # cost, berth immediately regardless of time of day.
                         # Hard cap: never defer more than MAX_NIGHT_DEFER ticks (~12h)
-                        MAX_NIGHT_DEFER = 12  # ticks = 6 hours (operational cap: no vessel held >6h for night timing)
+                        MAX_NIGHT_DEFER = 6  # ticks = 3 hours (operational cap: no vessel held >6h for night timing)
                         _beta = getattr(self, 'beta', 0.25)
                         _gamma = getattr(self, 'gamma', 0.25)
                         _delta = getattr(self, 'delta', 0.25)
