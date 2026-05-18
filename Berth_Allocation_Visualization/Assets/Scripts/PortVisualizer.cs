@@ -11,6 +11,12 @@ public class PierSlots
  
 public class PortVisualizer : MonoBehaviour
 {
+    [Header("Prefabs")]
+    public GameObject shipPrefabK;   // Destroyer
+    public GameObject shipPrefabF;   // Frigate
+    public GameObject shipPrefabL;   // Landing Ship
+    public GameObject shipPrefabP;   // Patrol Vessel
+
     [Header("Pier References")]
     public Transform[] pierTransforms;          // P1-P8
     public PierSlots[] slotPositions;           // slotPositions[pier][layer]
@@ -65,12 +71,30 @@ public class PortVisualizer : MonoBehaviour
  
     private ShipView CreateShip(ShipState state)
     {
-        GameObject go = Instantiate(shipPrefab);
-        go.name = $"Ship_{GetPhysicalShipId(state)}";
-        go.transform.localScale = new Vector3(30f, 10f, 80f);
+        // GameObject go = Instantiate(shipPrefab);
+        // go.name = $"Ship_{GetPhysicalShipId(state)}";
+        // go.transform.localScale = new Vector3(30f, 10f, 80f);
+        // return go.GetComponent<ShipView>();
+            GameObject prefab = state.type switch
+        {
+            "K" => shipPrefabK,
+            "F" => shipPrefabF,
+            "L" => shipPrefabL,
+            "P" => shipPrefabP,
+            _   => shipPrefabK
+        };
+
+        if (prefab == null)
+        {
+            Debug.LogWarning($"[PortVisualizer] No prefab assigned for type '{state.type}'");
+            return null;
+        }
+
+        GameObject go = Instantiate(prefab);
+        go.name = $"Ship_{state.type}_{state.id}";
         return go.GetComponent<ShipView>();
     }
- 
+
     private void PositionShip(ShipView shipView, ShipState state)
     {
         shipView.SetState(state);
@@ -90,7 +114,7 @@ public class PortVisualizer : MonoBehaviour
                 Vector3 pos = slotPositions[pierIdx].slots[slotIdx].position;
                 pos.y = 0.5f;
                 shipView.transform.position = pos;
-                shipView.transform.rotation = Quaternion.identity;
+                shipView.transform.rotation = slotPositions[pierIdx].slots[slotIdx].rotation * Quaternion.Euler(0, 90, 0);
                 return;
             }
         }
@@ -103,13 +127,12 @@ public class PortVisualizer : MonoBehaviour
             int row     = (idHash / anchorageColumns) % anchorageColumns;
             Vector3 offset = new Vector3(col * anchorageSpacing, 0.5f, row * anchorageSpacing);
             shipView.transform.position = anchorageOrigin.position + offset;
-            shipView.transform.rotation = Quaternion.identity;
+            shipView.transform.rotation = anchorageOrigin.rotation * Quaternion.Euler(0, 90, 0);
         }
         else
         {
             shipView.transform.position = new Vector3(0f, 0.5f, 0f);
-            shipView.transform.rotation = Quaternion.identity;
-        }
+            shipView.transform.rotation = anchorageOrigin.rotation * Quaternion.Euler(0, 90, 0);        }
     }
  
     private void UpdateGlobalUI(StateMessage state)

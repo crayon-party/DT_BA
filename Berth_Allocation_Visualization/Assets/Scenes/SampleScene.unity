@@ -27549,6 +27549,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db6848727eecb4b34ab3c7fd7664e1a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PortVisualizer
+  shipPrefabK: {fileID: 8824585687457491105, guid: d561f5c9055986940a8d49df84a6e4a0, type: 3}
+  shipPrefabF: {fileID: 3902202361214989548, guid: 990c2013bd7ded74aa195059d408244f, type: 3}
+  shipPrefabL: {fileID: 7941188170638473406, guid: a8441fd1d79faf045bdf64538f436dfe, type: 3}
+  shipPrefabP: {fileID: 6483317560854881976, guid: bfdfa52faf206d04cb685a8945c89470, type: 3}
   pierTransforms:
   - {fileID: 1060842412}
   - {fileID: 1163141300}
