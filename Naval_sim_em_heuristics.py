@@ -7,7 +7,7 @@ from collections import Counter
 S_REF = 300.0  # shifting
 F_REF = 400.0  # fatigue
 D_REF = 600.0  # delay (half-hours)
-E_REF = 1000000.0  # emissions (kg CO2) — updated to reflect shifting underway emissions
+E_REF = 2000000.0  # emissions (kg CO2) — updated to reflect shifting underway emissions
 SCALE = 50000.0  # fitness function anchor = blocking penalty
 
 VESSEL_SPECS = {
@@ -56,6 +56,11 @@ class NavalFinalOptimizer:
         if not hasattr(self, 'beta'):  self.beta = 0.25
         if not hasattr(self, 'gamma'): self.gamma = 0.25
         if not hasattr(self, 'delta'): self.delta = 0.25
+        # GA-optimisable fitness parameters
+        if not hasattr(self, 'lambda_beta'):  self.lambda_beta = 1.0
+        if not hasattr(self, 'lambda_gamma'): self.lambda_gamma = 1.0
+        if not hasattr(self, 'lambda_delta'): self.lambda_delta = 1.0
+        if not hasattr(self, 'lambda_block'): self.lambda_block = 1.0
 
     def update_weather(self, t):
         if self.weather_rem <= 0:
@@ -107,17 +112,20 @@ class NavalFinalOptimizer:
         wait_h = wait_time * 0.5  # ticks → hours
         e_idle = VESSEL_SPECS[v['type']]['e_idle']
 
-        # Normalised terms scaled to SCALE anchor
-        penalty += alpha * (self.shifting / S_REF) * SCALE  # shifting penalty
-        penalty += beta * (curr_f / F_REF) * SCALE  # fatigue
-        penalty -= gamma * (wait_time / D_REF) * SCALE  # wait reward
-        penalty -= delta * (e_idle * wait_h / E_REF) * SCALE  # emission reward: prioritise high-emitting vessels
+        l_b = getattr(self, 'lambda_beta', 1.0)
+        l_g = getattr(self, 'lambda_gamma', 1.0)
+        l_d = getattr(self, 'lambda_delta', 1.0)
+        l_k = getattr(self, 'lambda_block', 1.0)
+
+        penalty += beta * l_b * (curr_f / F_REF) * SCALE  # fatigue
+        penalty -= gamma * l_g * (wait_time / D_REF) * SCALE  # wait reward
+        penalty -= delta * l_d * (e_idle * wait_h / E_REF) * SCALE  # emission reward
 
         my_dep = t + (v['stay'] * 2)
         for i, other in enumerate(self.berths[p_id]):
             if other:
                 if (l_idx < i and my_dep < other['dep_t']) or (l_idx > i and my_dep > other['dep_t']):
-                    penalty += SCALE  # blocking penalty
+                    penalty += l_k * SCALE  # blocking penalty
         return penalty
 
     def step(self, max_h=2000):
