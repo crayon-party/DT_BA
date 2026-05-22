@@ -32,12 +32,27 @@ public class PortVisualizer : MonoBehaviour
     [Header("UI Elements")]
     public TMP_Text timeText;
     public TMP_Text weatherText;
-    public TMP_Text nightText;
+    //public TMP_Text nightText;
     public TMP_Text lunchText;
     public TMP_Text shipsAtBerthText;
     public TMP_Text tugStatusText;
     public TMP_Text metricsText;
- 
+
+    [Header("Status Bar Icons")]
+    public UnityEngine.UI.Image weatherIcon;
+    public UnityEngine.UI.Image nightIcon;
+    public UnityEngine.UI.Image lunchIcon;
+   
+    [Header("Sprites")]
+    public Sprite weatherClear;
+    public Sprite weatherLight;
+    public Sprite weatherModerate;
+    public Sprite weatherStorm;
+    public Sprite iconDay;
+    public Sprite iconNight;
+    public Sprite iconWorking;
+    public Sprite iconLunch;
+
     [Header("Screen Effects")]
     public UnityEngine.UI.Image nightTint;
     public UnityEngine.UI.Image weatherTint;
@@ -154,8 +169,8 @@ public class PortVisualizer : MonoBehaviour
         }
  
         // ── Night / Day ───────────────────────────────────────────────────────
-        if (nightText != null)
-            nightText.text = state.is_night ? "Night" : "Day";
+        //if (nightText != null)
+        //    nightText.text = state.is_night ? "Night" : "Day";
  
         // ── Lunch ─────────────────────────────────────────────────────────────
         if (lunchText != null)
@@ -222,5 +237,21 @@ public class PortVisualizer : MonoBehaviour
             if (ship != null) Destroy(ship.gameObject);
         ships.Clear();
     }
-
+    private void UpdateStatusIcons(StateMessage state)
+    {
+        if (lunchIcon != null)
+            lunchIcon.sprite = state.is_lunch ? iconLunch : iconWorking; 
+        if (weatherIcon != null)
+        {
+            weatherIcon.sprite = state.is_night ? iconNight :
+                state.weather switch
+                {
+                    0 => weatherClear,
+                    1 => weatherLight,
+                    2 => weatherModerate,
+                    3 => weatherStorm,
+                    _ => weatherClear
+                };
+        }
+    }
 }
